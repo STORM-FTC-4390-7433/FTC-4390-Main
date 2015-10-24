@@ -150,8 +150,8 @@ public class K9TeleOp extends OpMode {
 		throttleLeft =  (float)scaleInput(throttleLeft);
 
 		// write the values to the motors
-		motorRight1.setPower(throttleRight);
-		motorRight2.setPower(throttleRight);
+		motorRight1.setPower(-throttleRight);
+		motorRight2.setPower(-throttleRight);
 		motorLeft1.setPower(throttleLeft);
 		motorLeft2.setPower(throttleLeft);
 
