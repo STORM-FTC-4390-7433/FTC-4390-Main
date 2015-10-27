@@ -109,11 +109,11 @@ public class PushBotHardware extends OpMode
         //
         try
         {
-            v_motor_arm = hardwareMap.dcMotor.get ("left_arm");
+            v_motor_arm = hardwareMap.dcMotor.get ("arm");
         }
         catch (Exception p_exeception)
         {
-            m_warning_message ("left_arm");
+            m_warning_message ("arm");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
             v_motor_arm = null;
@@ -129,12 +129,12 @@ public class PushBotHardware extends OpMode
 
         try
         {
-            v_servo_climberSwitch = hardwareMap.servo.get ("left_hand");
+            v_servo_climberSwitch = hardwareMap.servo.get ("climberSwitch");
             v_servo_climberSwitch.setPosition (l_hand_position);
         }
         catch (Exception p_exeception)
         {
-            m_warning_message ("left_hand");
+            m_warning_message ("climberSwitch");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
             v_servo_climberSwitch = null;
@@ -403,6 +403,17 @@ public class PushBotHardware extends OpMode
 
     } // run_using_right_drive_encoder
 
+    public void run_using_arm_encoder ()
+    {
+        if (v_motor_arm != null)
+        {
+            v_motor_arm.setChannelMode
+                    ( DcMotorController.RunMode.RUN_USING_ENCODERS
+                    );
+        }
+
+    } // run_using_right_drive_encoder
+
     //--------------------------------------------------------------------------
     //
     // run_using_encoders
@@ -411,13 +422,12 @@ public class PushBotHardware extends OpMode
      * Set both drive wheel encoders to run, if the mode is appropriate.
      */
     public void run_using_encoders ()
-
     {
         //
         // Call other members to perform the action on both motors.
         //
-        run_using_left_drive_encoder ();
-        run_using_right_drive_encoder ();
+        run_using_left_drive_encoder();
+        run_using_right_drive_encoder();
 
     } // run_using_encoders
 
@@ -467,6 +477,22 @@ public class PushBotHardware extends OpMode
 
     } // run_without_right_drive_encoder
 
+    public void run_without_arm_encoder ()
+
+    {
+        if (v_motor_arm != null)
+        {
+            if (v_motor_arm.getChannelMode () ==
+                    DcMotorController.RunMode.RESET_ENCODERS)
+            {
+                v_motor_arm.setChannelMode
+                        ( DcMotorController.RunMode.RUN_WITHOUT_ENCODERS
+                        );
+            }
+        }
+
+    } // run_without_right_drive_encoder
+
     //--------------------------------------------------------------------------
     //
     // run_without_drive_encoders
@@ -481,7 +507,8 @@ public class PushBotHardware extends OpMode
         // Call other members to perform the action on both motors.
         //
         run_without_left_drive_encoder ();
-        run_without_right_drive_encoder ();
+        run_without_right_drive_encoder();
+        run_without_arm_encoder();
 
     } // run_without_drive_encoders
 
@@ -523,6 +550,17 @@ public class PushBotHardware extends OpMode
 
     } // reset_right_drive_encoder
 
+    public void reset_arm_encoder ()
+    {
+        if (v_motor_arm != null)
+        {
+            v_motor_arm.setChannelMode
+                    ( DcMotorController.RunMode.RESET_ENCODERS
+                    );
+        }
+
+    } // reset_right_drive_encoder
+
     //--------------------------------------------------------------------------
     //
     // reset_drive_encoders
@@ -537,7 +575,8 @@ public class PushBotHardware extends OpMode
         // Reset the motor encoders on the drive wheels.
         //
         reset_left_drive_encoder ();
-        reset_right_drive_encoder ();
+        reset_right_drive_encoder();
+        reset_arm_encoder();
 
     } // reset_drive_encoders
 
@@ -581,6 +620,19 @@ public class PushBotHardware extends OpMode
         return l_return;
 
     } // a_right_encoder_count
+
+    int a_arm_encoder_count ()
+    {
+        int l_return = 0;
+
+        if (v_motor_arm != null)
+        {
+            l_return = v_motor_arm.getCurrentPosition ();
+        }
+
+        return l_return;
+
+    } // a_arm_encoder_count
 
     //--------------------------------------------------------------------------
     //
@@ -651,12 +703,46 @@ public class PushBotHardware extends OpMode
             }
         }
 
+
+
         //
         // Return the status.
         //
         return l_return;
 
     } // has_right_drive_encoder_reached
+
+    boolean has_arm_encoder_reached (double p_count)
+    {
+        //
+        // Assume failure.
+        //
+        boolean l_return = false;
+
+        if (v_motor_arm != null)
+        {
+            //
+            // Have the encoders reached the specified values?
+            //
+            // TODO Implement stall code using these variables.
+            //
+            if (Math.abs (v_motor_arm.getCurrentPosition ()) > p_count)
+            {
+                //
+                // Set the status to a positive indication.
+                //
+                l_return = true;
+            }
+        }
+
+
+
+        //
+        // Return the status.
+        //
+        return l_return;
+
+    } // has_arm_encoder_reached
 
     //--------------------------------------------------------------------------
     //
@@ -665,11 +751,7 @@ public class PushBotHardware extends OpMode
     /**
      * Indicate whether the drive motors' encoders have reached a value.
      */
-    boolean have_drive_encoders_reached
-        ( double p_left_count
-        , double p_right_count
-        )
-
+    boolean have_drive_encoders_reached(double p_left_count, double p_right_count)
     {
         //
         // Assume failure.
@@ -679,8 +761,7 @@ public class PushBotHardware extends OpMode
         //
         // Have the encoders reached the specified values?
         //
-        if (has_left_drive_encoder_reached (p_left_count) &&
-            has_right_drive_encoder_reached (p_right_count))
+        if (has_left_drive_encoder_reached (p_left_count) && has_right_drive_encoder_reached (p_right_count))
         {
             //
             // Set the status to a positive indication.
@@ -695,6 +776,30 @@ public class PushBotHardware extends OpMode
 
     } // have_encoders_reached
 
+    boolean have_arm_encoders_reached(double p_arm_count)
+    {
+        //
+        // Assume failure.
+        //
+        boolean l_return = false;
+
+        //
+        // Have the encoders reached the specified values?
+        //
+        if (has_left_drive_encoder_reached (p_arm_count))
+        {
+            //
+            // Set the status to a positive indication.
+            //
+            l_return = true;
+        }
+
+        //
+        // Return the status.
+        //
+        return l_return;
+
+    } // have_encoders_reached
     //--------------------------------------------------------------------------
     //
     // drive_using_encoders
@@ -718,7 +823,7 @@ public class PushBotHardware extends OpMode
         //
         // Tell the system that motor encoders will be used.
         //
-        run_using_encoders ();
+        run_using_encoders();
 
         //
         // Start the drive wheel motors at full power.
@@ -860,7 +965,7 @@ public class PushBotHardware extends OpMode
     /**
      * Access the left arm motor's power level.
      */
-    double a_left_arm_power ()
+    double a_arm_power ()
     {
         double l_return = 0.0;
 
