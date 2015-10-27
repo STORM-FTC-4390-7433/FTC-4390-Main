@@ -157,7 +157,7 @@ public class K9TeleOp extends OpMode {
 
 		// update the position of the arm.
 
-		//if (gamepad1.a) {
+		//if (gamepad2.a) {
 		// if the A button is pushed on gamepad1, increment the position of
 		// the arm servo.
 		//armPosition += armDelta;

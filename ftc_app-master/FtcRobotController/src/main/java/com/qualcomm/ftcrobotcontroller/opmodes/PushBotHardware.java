@@ -109,14 +109,14 @@ public class PushBotHardware extends OpMode
         //
         try
         {
-            v_motor_left_arm = hardwareMap.dcMotor.get ("left_arm");
+            v_motor_arm = hardwareMap.dcMotor.get ("left_arm");
         }
         catch (Exception p_exeception)
         {
             m_warning_message ("left_arm");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
-            v_motor_left_arm = null;
+            v_motor_arm = null;
         }
 
         //
@@ -129,28 +129,15 @@ public class PushBotHardware extends OpMode
 
         try
         {
-            v_servo_left_hand = hardwareMap.servo.get ("left_hand");
-            v_servo_left_hand.setPosition (l_hand_position);
+            v_servo_climberSwitch = hardwareMap.servo.get ("left_hand");
+            v_servo_climberSwitch.setPosition (l_hand_position);
         }
         catch (Exception p_exeception)
         {
             m_warning_message ("left_hand");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
-            v_servo_left_hand = null;
-        }
-
-        try
-        {
-            v_servo_right_hand = hardwareMap.servo.get ("right_hand");
-            v_servo_right_hand.setPosition (l_hand_position);
-        }
-        catch (Exception p_exeception)
-        {
-            m_warning_message ("right_hand");
-            DbgLog.msg (p_exeception.getLocalizedMessage ());
-
-            v_servo_right_hand = null;
+            v_servo_climberSwitch = null;
         }
 
     } // init
@@ -877,9 +864,9 @@ public class PushBotHardware extends OpMode
     {
         double l_return = 0.0;
 
-        if (v_motor_left_arm != null)
+        if (v_motor_arm != null)
         {
-            l_return = v_motor_left_arm.getPower ();
+            l_return = v_motor_arm.getPower ();
         }
 
         return l_return;
@@ -895,9 +882,9 @@ public class PushBotHardware extends OpMode
      */
     void m_left_arm_power (double p_level)
     {
-        if (v_motor_left_arm != null)
+        if (v_motor_arm != null)
         {
-            v_motor_left_arm.setPower (p_level);
+            v_motor_arm.setPower (p_level);
         }
 
     } // m_left_arm_power
@@ -909,18 +896,6 @@ public class PushBotHardware extends OpMode
     /**
      * Access the hand position.
      */
-    double a_hand_position ()
-    {
-        double l_return = 0.0;
-
-        if (v_servo_left_hand != null)
-        {
-            l_return = v_servo_left_hand.getPosition ();
-        }
-
-        return l_return;
-
-    } // a_hand_position
 
     //--------------------------------------------------------------------------
     //
@@ -929,31 +904,6 @@ public class PushBotHardware extends OpMode
     /**
      * Mutate the hand position.
      */
-    void m_hand_position (double p_position)
-    {
-        //
-        // Ensure the specific value is legal.
-        //
-        double l_position = Range.clip
-            ( p_position
-            , Servo.MIN_POSITION
-            , Servo.MAX_POSITION
-            );
-
-        //
-        // Set the value.  The right hand value must be opposite of the left
-        // value.
-        //
-        if (v_servo_left_hand != null)
-        {
-            v_servo_left_hand.setPosition (l_position);
-        }
-        if (v_servo_right_hand != null)
-        {
-            v_servo_right_hand.setPosition (1.0 - l_position);
-        }
-
-    } // m_hand_position
 
     //--------------------------------------------------------------------------
     //
@@ -962,23 +912,6 @@ public class PushBotHardware extends OpMode
     /**
      * Open the hand to its fullest.
      */
-    void open_hand ()
-
-    {
-        //
-        // Set the value.  The right hand value must be opposite of the left
-        // value.
-        //
-        if (v_servo_left_hand != null)
-        {
-            v_servo_left_hand.setPosition (Servo.MAX_POSITION);
-        }
-        if (v_servo_right_hand != null)
-        {
-            v_servo_right_hand.setPosition (Servo.MIN_POSITION);
-        }
-
-    } // open_hand
 
     //--------------------------------------------------------------------------
     //
@@ -1023,24 +956,8 @@ public class PushBotHardware extends OpMode
     /**
      * Manage the aspects of the left arm motor.
      */
-    private DcMotor v_motor_left_arm;
+    private DcMotor v_motor_arm;
 
-    //--------------------------------------------------------------------------
-    //
-    // v_servo_left_hand
-    //
-    /**
-     * Manage the aspects of the left hand servo.
-     */
-    private Servo v_servo_left_hand;
-
-    //--------------------------------------------------------------------------
-    //
-    // v_servo_right_hand
-    //
-    /**
-     * Manage the aspects of the right hand servo.
-     */
-    private Servo v_servo_right_hand;
+    private Servo v_servo_climberSwitch;
 
 } // PushBotHardware
