@@ -56,10 +56,10 @@ public class K9TeleOp extends PushBotTelemetry {
 	final static double CLICK_PER_TURN = 10;
 
 	// position of the arm servo.
-	double armPosition;
+	double armPosition = 0;
 
-	// amount to change the arm servo position.
-	double armDelta = 0.1;
+	// amount to change the arm motor  position.
+	double armDelta = 1.0;
 
 	// position of the claw servo
 	double clawPosition;
@@ -71,6 +71,8 @@ public class K9TeleOp extends PushBotTelemetry {
 	DcMotor motorRight2;
 	DcMotor motorLeft1;
 	DcMotor motorLeft2;
+	DcMotor motorArm;
+	DcMotor motorWinch;
 	//Servo climberSwitch;
 
 	/**
@@ -107,6 +109,8 @@ public class K9TeleOp extends PushBotTelemetry {
 		motorRight2 = hardwareMap.dcMotor.get("motor_2");
 		motorLeft1 = hardwareMap.dcMotor.get("motor_3");
 		motorLeft2 = hardwareMap.dcMotor.get("motor_4");
+		motorArm = hardwareMap.dcMotor.get("motor_5");
+		motorWinch = hardwareMap.dcMotor.get("motor_6");
 		//motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
 		// assign the starting position of the wrist and claw
@@ -158,12 +162,16 @@ public class K9TeleOp extends PushBotTelemetry {
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
 			armPosition += armDelta;
+			motorArm.setPower(0.083);
+			motorWinch.setPower(1.0);
 		}
 
 		if (gamepad1.y) {
 			// if the Y button is pushed on gamepad1, decrease the position of
 			// the arm servo.
 			armPosition -= armDelta;
+			motorArm.setPower(-0.083);
+			motorWinch.setPower(-1.0);
 		}
 
 		// update the position of the claw
