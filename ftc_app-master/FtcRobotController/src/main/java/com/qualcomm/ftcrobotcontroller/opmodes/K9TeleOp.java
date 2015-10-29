@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class K9TeleOp extends OpMode {
+public class K9TeleOp extends PushBotTelemetry {
 
 	/*
 	 * Note: the configuration of the servos is such that
@@ -53,6 +53,7 @@ public class K9TeleOp extends OpMode {
 	final static double ARM_MAX_RANGE  = 0.90;
 	final static double CLAW_MIN_RANGE  = 0.20;
 	final static double CLAW_MAX_RANGE  = 0.7;
+	final static double CLICK_PER_TURN = 10;
 
 	// position of the arm servo.
 	double armPosition;
@@ -86,8 +87,6 @@ public class K9TeleOp extends OpMode {
 	 */
 	@Override
 	public void init() {
-
-
 		/*
 		 * Use the hardwareMap to get the dc motors and servos by name. Note
 		 * that the names of the devices must match the names used when you
@@ -155,19 +154,17 @@ public class K9TeleOp extends OpMode {
 		motorLeft1.setPower(throttleLeft);
 		motorLeft2.setPower(throttleLeft);
 
-		// update the position of the arm.
+		if (gamepad2.a) {
+			// if the A button is pushed on gamepad1, increment the position of
+			// the arm servo.
+			armPosition += armDelta;
+		}
 
-		//if (gamepad2.a) {
-		// if the A button is pushed on gamepad1, increment the position of
-		// the arm servo.
-		//armPosition += armDelta;
-		//}
-
-		//if (gamepad1.y) {
-		// if the Y button is pushed on gamepad1, decrease the position of
-		// the arm servo.
-		//armPosition -= armDelta;
-		//}
+		if (gamepad1.y) {
+			// if the Y button is pushed on gamepad1, decrease the position of
+			// the arm servo.
+			armPosition -= armDelta;
+		}
 
 		// update the position of the claw
 		//if (gamepad1.x) {
