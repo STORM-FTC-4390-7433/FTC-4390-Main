@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class K9TeleOp extends PushBotTelemetry {
+public class K9TeleOp extends OpMode {
 
 	/*
 	 * Note: the configuration of the servos is such that
@@ -49,11 +49,8 @@ public class K9TeleOp extends PushBotTelemetry {
 	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
 	 */
 	// TETRIX VALUES.
-	final static double ARM_MIN_RANGE  = 0.20;
-	final static double ARM_MAX_RANGE  = 0.90;
-	final static double CLAW_MIN_RANGE  = 0.20;
-	final static double CLAW_MAX_RANGE  = 0.7;
-	final static double CLICK_PER_TURN = 10;
+	final static double ARM_MIN_RANGE  = 0;  //Ground Level
+	final static double ARM_MAX_RANGE  = 100;  //Represents how many encoder clicks.
 
 	// position of the arm servo.
 	double armPosition = 0;
@@ -112,10 +109,6 @@ public class K9TeleOp extends PushBotTelemetry {
 		motorArm = hardwareMap.dcMotor.get("motor_5");
 		motorWinch = hardwareMap.dcMotor.get("motor_6");
 		//motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
-		// assign the starting position of the wrist and claw
-		//armPosition = 0.2;
-		//clawPosition = 0.2;
 	}
 
 	/*
@@ -126,6 +119,9 @@ public class K9TeleOp extends PushBotTelemetry {
 	@Override
 	public void loop() {
 
+		PushBotHardware encoder = new PushBotHardware();
+		encoder.reset_arm_encoder();
+        encoder.run_using_arm_encoder();
 		/*
 		 * Gamepad 1
 		 * 
@@ -139,9 +135,6 @@ public class K9TeleOp extends PushBotTelemetry {
 		// and 1 is full right
 		float throttleLeft = -gamepad1.left_stick_y;
 		float throttleRight = -gamepad1.right_stick_y;
-		//float direction = gamepad1.left_stick_x;
-		//float right;
-		//float left;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		throttleRight = Range.clip(throttleRight, -1, 1);
@@ -158,7 +151,7 @@ public class K9TeleOp extends PushBotTelemetry {
 		motorLeft1.setPower(throttleLeft);
 		motorLeft2.setPower(throttleLeft);
 
-		if (gamepad2.a) {
+		if (gamepad1.a && enocder.a_arm_encoder_count() < ARM_MAX_RANGE) {
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
 			armPosition += armDelta;
@@ -166,7 +159,7 @@ public class K9TeleOp extends PushBotTelemetry {
 			motorWinch.setPower(1.0);
 		}
 
-		if (gamepad1.y) {
+		if (gamepad1.y && enocder.a_arm_encoder_count() > ARM_MIN_RANGE) {
 			// if the Y button is pushed on gamepad1, decrease the position of
 			// the arm servo.
 			armPosition -= armDelta;
