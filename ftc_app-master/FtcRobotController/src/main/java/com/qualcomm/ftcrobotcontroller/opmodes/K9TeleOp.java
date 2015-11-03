@@ -55,11 +55,15 @@ public class K9TeleOp extends OpMode {
 
 //	final static double CLICK_PER_TURN = 10;
 
-	// position of the arm servo.
-	double armPosition;
+	final static double ARM_MIN_RANGE  = 0;  //Ground Level
+	final static double ARM_MAX_RANGE  = 100;  //Represents how many encoder clicks.
 
-	// amount to change the arm servo position.
-	double armDelta = 0.1;
+
+	// position of the arm servo.
+	double armPosition = 0;
+
+	// amount to change the arm motor  position.
+	double armDelta = 1.0;
 
 	// position of the claw servo
 	double clawPosition;
@@ -71,6 +75,8 @@ public class K9TeleOp extends OpMode {
 	DcMotor motorRight2;
 	DcMotor motorLeft1;
 	DcMotor motorLeft2;
+	DcMotor motorArm;
+	DcMotor motorWinch;
 	//Servo climberSwitch;
 
 	/**
@@ -107,11 +113,9 @@ public class K9TeleOp extends OpMode {
 		motorRight2 = hardwareMap.dcMotor.get("motor_2");
 		motorLeft1 = hardwareMap.dcMotor.get("motor_3");
 		motorLeft2 = hardwareMap.dcMotor.get("motor_4");
+		motorArm = hardwareMap.dcMotor.get("motor_5");
+		motorWinch = hardwareMap.dcMotor.get("motor_6");
 		//motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
-		// assign the starting position of the wrist and claw
-		//armPosition = 0.2;
-		//clawPosition = 0.2;
 	}
 
 	/*
@@ -122,6 +126,9 @@ public class K9TeleOp extends OpMode {
 	@Override
 	public void loop() {
 
+		PushBotHardware encoder = new PushBotHardware();
+		encoder.reset_arm_encoder();
+        encoder.run_using_arm_encoder();
 		/*
 		 * Gamepad 1
 		 * 
@@ -135,9 +142,6 @@ public class K9TeleOp extends OpMode {
 		// and 1 is full right
 		float throttleLeft = -gamepad1.left_stick_y;
 		float throttleRight = -gamepad1.right_stick_y;
-		//float direction = gamepad1.left_stick_x;
-		//float right;
-		//float left;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		throttleRight = Range.clip(throttleRight, -1, 1);
@@ -154,16 +158,20 @@ public class K9TeleOp extends OpMode {
 		motorLeft1.setPower(throttleLeft);
 		motorLeft2.setPower(throttleLeft);
 
-		if (gamepad2.a) {
+		if (gamepad1.a && encoder.a_arm_encoder_count() < ARM_MAX_RANGE) {
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
 			armPosition += armDelta;
+			motorArm.setPower(0.083);
+			motorWinch.setPower(1.0);
 		}
 
-		if (gamepad1.y) {
+		if (gamepad1.y && encoder.a_arm_encoder_count() > ARM_MIN_RANGE) {
 			// if the Y button is pushed on gamepad1, decrease the position of
 			// the arm servo.
 			armPosition -= armDelta;
+			motorArm.setPower(-0.083);
+			motorWinch.setPower(-1.0);
 		}
 
 		// update the position of the claw
