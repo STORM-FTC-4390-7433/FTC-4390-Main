@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class K9TeleOp extends PushBotTelemetry {
+public class K9TeleOp extends OpMode {
 
 	/*
 	 * Note: the configuration of the servos is such that
@@ -49,11 +49,11 @@ public class K9TeleOp extends PushBotTelemetry {
 	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
 	 */
 	// TETRIX VALUES.
-	final static double ARM_MIN_RANGE  = 0.20;
-	final static double ARM_MAX_RANGE  = 0.90;
-	final static double CLAW_MIN_RANGE  = 0.20;
-	final static double CLAW_MAX_RANGE  = 0.7;
-	final static double CLICK_PER_TURN = 10;
+	//Arm values
+//	final static double ARM_MIN_RANGE  = 0.20;
+//	final static double ARM_MAX_RANGE  = 0.90;
+
+//	final static double CLICK_PER_TURN = 10;
 
 	// position of the arm servo.
 	double armPosition;
