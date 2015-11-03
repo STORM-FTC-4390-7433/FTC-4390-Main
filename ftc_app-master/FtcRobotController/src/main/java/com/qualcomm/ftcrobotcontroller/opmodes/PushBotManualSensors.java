@@ -165,7 +165,10 @@ public class PushBotManualSensors extends PushBotTelemetrySensors
 //        {
 //            m_hand_position (a_hand_position () - 0.05);
 //        }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6d74ef082d56dfd074913bb9d152f7ea85898780
 
         //
         // Send telemetry data to the driver station.

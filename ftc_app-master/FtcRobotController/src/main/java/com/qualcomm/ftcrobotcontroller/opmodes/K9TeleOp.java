@@ -58,7 +58,6 @@ public class K9TeleOp extends OpMode {
 	final static double ARM_MIN_RANGE  = 0;  //Ground Level
 	final static double ARM_MAX_RANGE  = 100;  //Represents how many encoder clicks.
 
-
 	// position of the arm servo.
 	double armPosition = 0;
 
