@@ -157,21 +157,27 @@ public class K9TeleOp extends OpMode {
 		motorLeft1.setPower(throttleLeft);
 		motorLeft2.setPower(throttleLeft);
 
+		double armPower = 0;
+		double winchPower = 0;
+
 		if (gamepad1.a && encoder.a_arm_encoder_count() < ARM_MAX_RANGE) {
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
 			armPosition += armDelta;
-			motorArm.setPower(0.083);
-			motorWinch.setPower(1.0);
+			armPower = 0.083;
+			winchPower = 1;
 		}
 
 		if (gamepad1.y && encoder.a_arm_encoder_count() > ARM_MIN_RANGE) {
 			// if the Y button is pushed on gamepad1, decrease the position of
 			// the arm servo.
 			armPosition -= armDelta;
-			motorArm.setPower(-0.083);
-			motorWinch.setPower(-1.0);
+			armPower = -0.083;
+			winchPower = -1;
 		}
+
+		motorArm.setPower(armPower);
+		motorWinch.setPower(winchPower);
 
 		// update the position of the claw
 		//if (gamepad1.x) {
