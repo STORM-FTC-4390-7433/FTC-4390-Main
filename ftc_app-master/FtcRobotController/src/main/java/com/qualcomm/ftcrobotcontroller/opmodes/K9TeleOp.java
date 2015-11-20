@@ -164,7 +164,7 @@ public class K9TeleOp extends OpMode {
 		encoder.reset_arm_encoder();
 		encoder.run_using_arm_encoder();
 
-		if (gamepad1.a) {  // && encoder.a_arm_encoder_count() < ARM_MAX_RANGE
+		if (gamepad2.a) {  // && encoder.a_arm_encoder_count() < ARM_MAX_RANGE
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
 			armPosition += armDelta;
@@ -172,7 +172,7 @@ public class K9TeleOp extends OpMode {
 			winchPower = 1;
 		}
 
-		if (gamepad1.y) {  // && encoder.a_arm_encoder_count() > ARM_MIN_RANGE
+		if (gamepad2.y) {  // && encoder.a_arm_encoder_count() > ARM_MIN_RANGE
 			// if the Y button is pushed on gamepad1, decrease the position of
 			// the arm servo.
 			armPosition -= armDelta;
