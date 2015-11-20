@@ -12,7 +12,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  * @author SSI Robotics
  * @version 2015-08-01-06-01
  */
-public class PushBotAuto extends PushBotTelemetry
+public class AutonomousLeft extends PushBotTelemetry
 
 {
     //--------------------------------------------------------------------------
@@ -24,7 +24,7 @@ public class PushBotAuto extends PushBotTelemetry
      *
      * The system calls this member when the class is instantiated.
      */
-    public PushBotAuto ()
+    public AutonomousLeft ()
 
     {
         //
@@ -78,61 +78,61 @@ public class PushBotAuto extends PushBotTelemetry
     {
         switch (v_state)
         {
-        //
-        // Synchronize the state machine and hardware.
-        //
-        case 0:
-            reset_drive_encoders ();
-            v_state++;
-
-            break;
-
-        case 1:
-            run_using_encoders ();
-            set_drive_power (1.0f, 0.78f);
-
-            if (have_drive_encoders_reached (2880, 2880))
-            {
+            //
+            // Synchronize the state machine and hardware.
+            //
+            case 0:
                 reset_drive_encoders ();
-
-                set_drive_power (0.0f, 0.0f);
-
                 v_state++;
-            }
-            break;
-        //
-        // Wait...
-        //
-        case 2:
-            if (have_drive_encoders_reset ())
-            {
-                v_state++;
-            }
-            break;
-        //
-        // Turn left until the encoders exceed the specified values.
-        //
-        case 3:
-            run_using_encoders ();
-            set_drive_power (1.0f, 1.0f);
-            if (have_drive_encoders_reached (400, 400))
-            {
-                reset_drive_encoders ();
-                set_drive_power (0.0f, 0.0f);
-                v_state++;
-            }
-            break;
 
-        case 4:
-            if (have_drive_encoders_reset ())
-            {
-                v_state++;
-            }
-            break;
+                break;
 
-        default:
+            case 1:
+                run_using_encoders ();
+                set_drive_power (.78f, 1.0f);
 
-            break;
+                if (have_drive_encoders_reached (2880, 2880))
+                {
+                    reset_drive_encoders ();
+
+                    set_drive_power (0.0f, 0.0f);
+
+                    v_state++;
+                }
+                break;
+            //
+            // Wait...
+            //
+            case 2:
+                if (have_drive_encoders_reset ())
+                {
+                    v_state++;
+                }
+                break;
+            //
+            // Turn left until the encoders exceed the specified values.
+            //
+            case 3:
+                run_using_encoders ();
+                set_drive_power (1.0f, 1.0f);
+                if (have_drive_encoders_reached (400, 400))
+                {
+                    reset_drive_encoders ();
+                    set_drive_power (0.0f, 0.0f);
+                    v_state++;
+                }
+                break;
+
+            case 4:
+                if (have_drive_encoders_reset ())
+                {
+                    v_state++;
+                }
+                break;
+
+            default:
+
+                break;
         }
 
         update_telemetry (); // Update common telemetry

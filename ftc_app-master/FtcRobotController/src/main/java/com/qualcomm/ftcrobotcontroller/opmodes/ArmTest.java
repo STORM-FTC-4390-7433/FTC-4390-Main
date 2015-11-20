@@ -169,16 +169,16 @@ public class ArmTest extends OpMode {
             // if the A button is pushed on gamepad1, increment the position of
             // the arm servo.
             armPosition += armDelta;
-            armPower = 0.166;  //changed from .083
-            winchPower = 2;  //from 1
+            armPower = 0.083;  //changed from .083
+            winchPower = 1;  //from 1
         }
 
         if (gamepad1.y && encoder.a_arm_encoder_count() > ARM_MIN_RANGE) {
             // if the Y button is pushed on gamepad1, decrease the position of
             // the arm servo.
             armPosition -= armDelta;
-            armPower = -0.166;
-            winchPower = -2;
+            armPower = -0.083;
+            winchPower = -1;
         }
 
         motorArm.setPower(armPower);
