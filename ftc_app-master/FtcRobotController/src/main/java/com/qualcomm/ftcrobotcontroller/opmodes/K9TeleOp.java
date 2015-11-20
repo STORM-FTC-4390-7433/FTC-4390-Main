@@ -70,10 +70,10 @@ public class K9TeleOp extends OpMode {
 	// amount to change the claw servo position by
 	double clawDelta = 0.1;
 
-	DcMotor motorRight1;
-	DcMotor motorRight2;
-	DcMotor motorLeft1;
-	DcMotor motorLeft2;
+	DcMotor motorRight;
+	//DcMotor motorRight2;
+	DcMotor motorLeft;
+	//DcMotor motorLeft2;
 	DcMotor motorArm;
 	DcMotor motorWinch;
 	//Servo climberSwitch;
@@ -108,12 +108,12 @@ public class K9TeleOp extends OpMode {
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
 		 */
-		motorRight1 = hardwareMap.dcMotor.get("motor_1");
-		motorRight2 = hardwareMap.dcMotor.get("motor_2");
-		motorLeft1 = hardwareMap.dcMotor.get("motor_3");
-		motorLeft2 = hardwareMap.dcMotor.get("motor_4");
-		motorArm = hardwareMap.dcMotor.get("motor_5");
-		motorWinch = hardwareMap.dcMotor.get("motor_6");
+		motorRight = hardwareMap.dcMotor.get("motor_right");
+		//motorRight2 = hardwareMap.dcMotor.get("motor_2");
+		motorLeft = hardwareMap.dcMotor.get("motor_left");
+		//motorLeft2 = hardwareMap.dcMotor.get("motor_4");
+		motorArm = hardwareMap.dcMotor.get("motor_arm");
+		motorWinch = hardwareMap.dcMotor.get("motor_winch");
 		//motorLeft.setDirection(DcMotor.Direction.REVERSE);
 	}
 
@@ -125,9 +125,9 @@ public class K9TeleOp extends OpMode {
 	@Override
 	public void loop() {
 
-		PushBotHardware encoder = new PushBotHardware();
-		encoder.reset_arm_encoder();
-        encoder.run_using_arm_encoder();
+		//PushBotHardware encoder = new PushBotHardware();
+		//encoder.reset_arm_encoder();
+        //encoder.run_using_arm_encoder();
 		/*
 		 * Gamepad 1
 		 * 
@@ -152,27 +152,31 @@ public class K9TeleOp extends OpMode {
 		throttleLeft =  (float)scaleInput(throttleLeft);
 
 		// write the values to the motors
-		motorRight1.setPower(-throttleRight);
-		motorRight2.setPower(-throttleRight);
-		motorLeft1.setPower(throttleLeft);
-		motorLeft2.setPower(throttleLeft);
+		motorRight.setPower(-throttleRight);
+		//motorRight2.setPower(-throttleRight);
+		motorLeft.setPower(throttleLeft);
+		//motorLeft2.setPower(throttleLeft);
 
 		double armPower = 0;
 		double winchPower = 0;
 
-		if (gamepad1.a && encoder.a_arm_encoder_count() < ARM_MAX_RANGE) {
+		PushBotHardware encoder = new PushBotHardware();
+		encoder.reset_arm_encoder();
+		encoder.run_using_arm_encoder();
+
+		if (gamepad1.a) {  // && encoder.a_arm_encoder_count() < ARM_MAX_RANGE
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
 			armPosition += armDelta;
-			armPower = 0.083;
+			armPower = 1;
 			winchPower = 1;
 		}
 
-		if (gamepad1.y && encoder.a_arm_encoder_count() > ARM_MIN_RANGE) {
+		if (gamepad1.y) {  // && encoder.a_arm_encoder_count() > ARM_MIN_RANGE
 			// if the Y button is pushed on gamepad1, decrease the position of
 			// the arm servo.
 			armPosition -= armDelta;
-			armPower = -0.083;
+			armPower = -1;//.083
 			winchPower = -1;
 		}
 
