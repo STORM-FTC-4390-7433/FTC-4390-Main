@@ -81,11 +81,11 @@ public class PushBotHardware extends OpMode
         //
         try
         {
-            v_motor_left_drive = hardwareMap.dcMotor.get ("left_drive");
+            v_motor_left_drive = hardwareMap.dcMotor.get ("motor_left");
         }
         catch (Exception p_exeception)
         {
-            m_warning_message ("left_drive");
+            m_warning_message ("motor_left");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
             v_motor_left_drive = null;
@@ -93,12 +93,12 @@ public class PushBotHardware extends OpMode
 
         try
         {
-            v_motor_right_drive = hardwareMap.dcMotor.get ("right_drive");
+            v_motor_right_drive = hardwareMap.dcMotor.get ("motor_right");
             v_motor_right_drive.setDirection (DcMotor.Direction.REVERSE);
         }
         catch (Exception p_exeception)
         {
-            m_warning_message ("right_drive");
+            m_warning_message ("motor_right");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
             v_motor_right_drive = null;
@@ -109,14 +109,26 @@ public class PushBotHardware extends OpMode
         //
         try
         {
-            v_motor_arm = hardwareMap.dcMotor.get ("arm");
+            v_motor_arm = hardwareMap.dcMotor.get ("motor_arm");
         }
         catch (Exception p_exeception)
         {
-            m_warning_message ("arm");
+            m_warning_message ("motor_arm");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
             v_motor_arm = null;
+        }
+
+        try
+        {
+            v_motor_winch = hardwareMap.dcMotor.get ("motor_winch");
+        }
+        catch (Exception p_exeception)
+        {
+            m_warning_message ("motor_winch");
+            DbgLog.msg (p_exeception.getLocalizedMessage ());
+
+            v_motor_winch = null;
         }
 
         //
@@ -365,6 +377,15 @@ public class PushBotHardware extends OpMode
 
     } // set_drive_power
 
+    void set_arm_power (double p_power)
+    {
+        if (v_motor_left_drive != null)
+        {
+            v_motor_arm.setPower (p_power);
+        }
+
+    } // set_drive_power
+
     //--------------------------------------------------------------------------
     //
     // run_using_left_drive_encoder
@@ -428,6 +449,7 @@ public class PushBotHardware extends OpMode
         //
         run_using_left_drive_encoder();
         run_using_right_drive_encoder();
+        run_using_arm_encoder();
 
     } // run_using_encoders
 
@@ -1053,6 +1075,8 @@ public class PushBotHardware extends OpMode
      * Manage the aspects of the right drive motor.
      */
     private DcMotor v_motor_right_drive;
+
+    private DcMotor v_motor_winch;
 
     //--------------------------------------------------------------------------
     //

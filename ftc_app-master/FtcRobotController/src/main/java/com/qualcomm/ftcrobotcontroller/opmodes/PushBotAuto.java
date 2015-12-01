@@ -13,8 +13,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  * @version 2015-08-01-06-01
  */
 public class PushBotAuto extends PushBotTelemetry
-
 {
+    final static int CLICKSPERTILE = 100;
     //--------------------------------------------------------------------------
     //
     // PushBotAuto
@@ -89,9 +89,9 @@ public class PushBotAuto extends PushBotTelemetry
 
         case 1:
             run_using_encoders ();
-            set_drive_power (1.0f, 0.78f);
+            set_drive_power (1.0f, 1.0f);
 
-            if (have_drive_encoders_reached (2880, 2880))
+            if (have_drive_encoders_reached (2 * CLICKSPERTILE, 2 * CLICKSPERTILE))
             {
                 reset_drive_encoders ();
 
@@ -114,8 +114,8 @@ public class PushBotAuto extends PushBotTelemetry
         //
         case 3:
             run_using_encoders ();
-            set_drive_power (1.0f, 1.0f);
-            if (have_drive_encoders_reached (400, 400))
+            set_drive_power (1.0f, -1.0f);
+            if (have_drive_encoders_reached (50, 50))
             {
                 reset_drive_encoders ();
                 set_drive_power (0.0f, 0.0f);
@@ -124,8 +124,19 @@ public class PushBotAuto extends PushBotTelemetry
             break;
 
         case 4:
-            if (have_drive_encoders_reset ())
+            if (have_drive_encoders_reset())
             {
+                v_state++;
+            }
+            break;
+
+        case 5:
+            run_using_encoders ();
+            set_drive_power (1.0f, 1.0f);
+            if (have_drive_encoders_reached(3 * CLICKSPERTILE, 3 * CLICKSPERTILE))
+            {
+                reset_drive_encoders ();
+                set_drive_power (0.0f, 0.0f);
                 v_state++;
             }
             break;

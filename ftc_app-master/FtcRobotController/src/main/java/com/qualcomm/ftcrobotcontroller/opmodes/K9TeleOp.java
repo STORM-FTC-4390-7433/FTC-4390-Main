@@ -67,6 +67,8 @@ public class K9TeleOp extends OpMode {
 	// position of the claw servo
 	double clawPosition;
 
+	double climberPosition;
+
 	// amount to change the claw servo position by
 	double clawDelta = 0.1;
 
@@ -76,7 +78,7 @@ public class K9TeleOp extends OpMode {
 	//DcMotor motorLeft2;
 	DcMotor motorArm;
 	DcMotor motorWinch;
-	//Servo climberSwitch;
+	Servo servoClimber;
 
 	/**
 	 * Constructor
@@ -115,6 +117,7 @@ public class K9TeleOp extends OpMode {
 		motorArm = hardwareMap.dcMotor.get("motor_arm");
 		motorWinch = hardwareMap.dcMotor.get("motor_winch");
 		//motorLeft.setDirection(DcMotor.Direction.REVERSE);
+		servoClimber = hardwareMap.servo.get("servo_climber");
 	}
 
 	/*
@@ -141,6 +144,7 @@ public class K9TeleOp extends OpMode {
 		// and 1 is full right
 		float throttleLeft = -gamepad1.left_stick_y;
 		float throttleRight = -gamepad1.right_stick_y;
+
 
 		// clip the right/left values so that the values never exceed +/- 1
 		throttleRight = Range.clip(throttleRight, -1, 1);
@@ -169,7 +173,6 @@ public class K9TeleOp extends OpMode {
 			// the arm servo.
 			armPosition += armDelta;
 			armPower = 1;
-			winchPower = 1;
 		}
 
 		if (gamepad2.y) {  // && encoder.a_arm_encoder_count() > ARM_MIN_RANGE
@@ -177,8 +180,27 @@ public class K9TeleOp extends OpMode {
 			// the arm servo.
 			armPosition -= armDelta;
 			armPower = -1;//.083
+		}
+
+		if (gamepad2.dpad_up){
 			winchPower = -1;
 		}
+
+		if (gamepad2.dpad_down){
+			winchPower = 1;
+		}
+
+		if (gamepad2.left_bumper) {
+			climberPosition -= 0.1;
+		}
+
+		if (gamepad2.right_bumper) {
+			climberPosition += 0.1;
+
+		}
+
+
+		servoClimber.setPosition(climberPosition);
 
 		motorArm.setPower(armPower);
 		motorWinch.setPower(winchPower);
