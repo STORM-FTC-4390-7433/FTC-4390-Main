@@ -141,6 +141,23 @@ public class PushBotAuto extends PushBotTelemetry
             }
             break;
 
+        case 6:
+            if (have_drive_encoders_reset())
+            {
+                v_state++;
+            }
+            break;
+
+        case 7:
+            run_using_encoders();
+            set_arm_power(1.0f);
+            if (has_arm_encoder_reached(25)){
+                reset_drive_encoders ();
+                set_arm_power (0.0f);
+                v_state++;
+            }
+            break;
+
         default:
 
             break;

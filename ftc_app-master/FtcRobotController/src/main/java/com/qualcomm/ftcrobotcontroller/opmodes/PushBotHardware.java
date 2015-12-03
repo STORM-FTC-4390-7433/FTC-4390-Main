@@ -379,7 +379,7 @@ public class PushBotHardware extends OpMode
 
     void set_arm_power (double p_power)
     {
-        if (v_motor_left_drive != null)
+        if (v_motor_arm != null)
         {
             v_motor_arm.setPower (p_power);
         }
