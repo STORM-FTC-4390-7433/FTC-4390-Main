@@ -376,7 +376,6 @@ public class PushBotHardware extends OpMode
         }
 
     } // set_drive_power
-
     void set_arm_power (double p_power)
     {
         if (v_motor_arm != null)
@@ -385,6 +384,11 @@ public class PushBotHardware extends OpMode
         }
 
     } // set_drive_power
+
+    void set_servo_position (double position){
+        if (v_servo_climberSwitch != null && (position >= 0 && position <= 1))
+            v_servo_climberSwitch.setPosition((position));
+    }
 
     //--------------------------------------------------------------------------
     //

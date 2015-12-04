@@ -76,17 +76,20 @@ public class PushBotAuto extends PushBotTelemetry
      */
     @Override public void loop ()
     {
+        long start, elapsed;
         switch (v_state)
         {
         //
         // Synchronize the state machine and hardware.
         //
         case 0:
+            start = System.currentTimeMillis();
             reset_drive_encoders ();
-            v_state++;
+            if (System.currentTimeMillis() - start >= 5000)
+                v_state++;
 
             break;
-
+// cas 1 wait 10sc cas lst rotate servo 180
         case 1:
             run_using_encoders ();
             set_drive_power (1.0f, 1.0f);
@@ -156,6 +159,7 @@ public class PushBotAuto extends PushBotTelemetry
                 set_arm_power (0.0f);
                 v_state++;
             }
+            set_servo_position(.5);
             break;
 
         default:
